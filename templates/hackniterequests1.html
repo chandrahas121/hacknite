@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>My Rides</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+<style type="text/css">
+.navbar-custom {
+    background-color: #f4511e !important; /* Orange navbar color */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+}
+body {
+    margin-top: 70px; /* Adjusted margin for navbar */
+    background: #eee;
+}
+.articles a {
+    text-decoration: none !important;
+    display: block;
+    margin-bottom: 0;
+    color: #555;
+}
+.articles .badge {
+    font-size: 0.7em;
+    padding: 5px 10px;
+    line-height: 1;
+    margin-left: 10px;
+}
+.articles .item {
+    padding: 20px;
+    position: relative;
+}
+.articles .item:nth-of-type(even) {
+    background: #fafafa;
+}
+.articles .item .image {
+    min-width: 50px;
+    max-width: 50px;
+    height: 50px;
+    margin-right: 15px;
+}
+.articles .item img {
+    padding: 3px;
+    border: 1px solid #28a745;
+}
+.articles .item h3 {
+    color: #555;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+.articles .item small {
+    color: #aaa;
+    font-size: 0.75em;
+}
+.card-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+.card-close .dropdown-toggle {
+    color: #999;
+    background: none;
+    border: none;
+}
+.card-close .dropdown-toggle:after {
+    display: none;
+}
+.card-close .dropdown-menu {
+    border: none;
+    min-width: auto;
+    font-size: 0.9em;
+    border-radius: 0;
+    -webkit-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1), -2px -2px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1), -2px -2px 3px rgba(0, 0, 0, 0.1);
+}
+.card-close .dropdown-menu a {
+    color: #999 !important;
+}
+.card-close .dropdown-menu a:hover {
+    background: #796AEE;
+    color: #fff !important;
+}
+.card-close .dropdown-menu a i {
+    margin-right: 10px;
+    -webkit-transition: none;
+    transition: none;
+}
+
+/* Add scrollbar */
+.card-body {
+    max-height: calc(100vh - 150px); /* Adjust as needed */
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+}
+.card-body::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
+
+/* Chat button */
+.chat-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
+}
+
+</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Drive Connect</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+                <!-- <li class="nav-item"><a class="nav-link" href="/drive_connect/profile">Profile</a></li> -->
+                <li class="nav-item"><a class="nav-link" href="/myrides">My Rides</a></li>
+                <li class="nav-item"><a class="nav-link" href="/myrides/history">Ride History</a></li>
+                <li class="nav-item"><a class="nav-link" href="/authentication/logout">Log Out</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <div class="col-lg-6 h-100">
+            <div class="articles card h-100">
+                <div class="card-close">
+                    <div class="dropdown">
+                        <button type="button" id="closeCard4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                        <div aria-labelledby="closeCard4" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                    </div>
+                </div>
+                <div class="card-header d-flex align-items-center">
+                    <h2 class="h3">Your Requests</h2>
+                    <div class="badge badge-rounded bg-green">4 New </div>
+                </div>
+                <!-- Add this code inside the appropriate location where requests should be displayed -->
+                <div class="card-body" id="requests-list">
+                    {% for request in requests %}
+                    <div class="item d-flex align-items-center">
+                        <div class="image"><img src="{{request.receiver.profile_photo.url }}" alt="..." class="img-fluid rounded-circle"></div>
+                        <div class="text">
+                            <a href="#"><h3 class="h5">{{ request.receiver.username }}</h3></a>
+                            <!-- <small>Posted on {{ request.timestamp }} by {{ request.sender.username }}. </small><br> -->
+                            <small>from {{ request.source }} to {{ request.destination }} on {{request.date}} at {{request.time}}. </small>
+                        </div>
+                        <div class="ml-auto btn-group mt-2" role="group" aria-label="Accept or Decline">
+                            <form method="post" action="{% url 'cancel_friend_request' request_id=request.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Cancel Request</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-6 h-100">
+            <div class="articles card h-100">
+                <div class="card-close">
+                    <div class="dropdown">
+                        <button type="button" id="closeCard4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                        <div aria-labelledby="closeCard4" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                    </div>
+                </div>
+                <div class="card-header d-flex align-items-center">
+                    <h2 class="h3">Invitations</h2>
+                    <div class="badge badge-rounded bg-green">4 New </div>
+                </div>
+                <!-- Add this code inside the appropriate location where invitations should be displayed -->
+                <div class="card-body" id="invitations-list">
+                    {% for invitation in invitations %}
+                    <div class="item d-flex align-items-center">
+                        <div class="image"><img src="{{invitation.sender.profile_photo.url }}" alt="..." class="img-fluid rounded-circle"></div>
+                        <div class="text">
+                            <a href="#"><h3 class="h5">{{ invitation.sender.username }}</h3></a>
+                            <!-- <small>Posted on {{ invitation.timestamp }} by {{ invitation.sender.username }}. </small> -->
+                            <small> from {{ invitation.source }} to {{ invitation.destination }} on {{invitation.date}} at {{invitation.time}}.</small>
+                        </div>
+                        <div class="ml-auto btn-group mt-2" role="group" aria-label="Accept or Decline">
+                            <form method="post" action="{% url 'accept_friend_request' request_id=invitation.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">Accept</button>
+                            </form>
+                            <form method="post" action="{% url 'decline_friend_request' request_id=invitation.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Decline</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript">
+// JavaScript to show scrollbar only when needed
+window.addEventListener('DOMContentLoaded', () => {
+    const scrollableList = document.getElementById('scrollable-list');
+    const scrollableList2 = document.getElementById('scrollable-list2');
+
+    if (scrollableList.scrollHeight > scrollableList.clientHeight) {
+        scrollableList.style.paddingRight = '15px'; // Adjust as needed to prevent layout shift
+    }
+
+    if (scrollableList2.scrollHeight > scrollableList2.clientHeight) {
+        scrollableList2.style.paddingRight = '15px'; // Adjust as needed to prevent layout shift
+    }
+});
+</script>
+</body>
+</html>
