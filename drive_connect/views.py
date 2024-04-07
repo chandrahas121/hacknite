@@ -32,9 +32,13 @@ def search_users(request):
             # Sort the queryset based on the time difference between the input time and other users' times
         
             sorted_users = sorted(users_with_same_trip, key=lambda trip: abs((datetime.combine(datetime.strptime(date, '%Y-%m-%d').date(), input_time) - datetime.combine(trip.date, trip.time)).total_seconds()))
+            
+            
+          
 
-            context = {'users_with_same_trip': sorted_users}
-            print(context)
+            context = {
+                'users_with_same_trip': sorted_users,
+            }
             return render(request, 'hacknitesearched1.html', context)
         else:
             # Use Django's messages framework to display an error message

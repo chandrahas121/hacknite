@@ -102,7 +102,7 @@ from django.utils import timezone
 
 class Rating(models.Model):
     rated_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ratings_received")
-    average_rating = models.IntegerField(default=0)  # Total sum of ratings given by users
+    average_rating = models.FloatField(default=0) # Total sum of ratings given by users
     num_ratings = models.IntegerField(default=0)  # Total number of users who rated
     feedback = models.TextField(blank=True)
     timestamp = models.DateTimeField(default=timezone.now)
@@ -120,3 +120,6 @@ class Rating(models.Model):
             self.average_rating=rating_value
         self.num_ratings+=1
         self.save()
+        user = self.rated_user
+        user.rating=self.average_rating
+        user.save()

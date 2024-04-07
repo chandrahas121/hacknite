@@ -284,13 +284,23 @@
           
           <input class="form__input" type="text" placeholder="Username" name="username">
           <input class="form__input" type="password" placeholder="Password" name="password">
+          {% if field %}
+            <div class="alert alert-warning" role="alert">
+              {{field}} field is empty
+            </div>
+          {% endif %}
           {% if invalid_credentials %}
             <div class="alert alert-warning" role="alert">
 
               Username and/or password incorrect. Please try again.
             </div>
           {% endif %}
+<<<<<<< HEAD
           <div style="margin-bottom: 20px;"></div>
+=======
+          
+          
+>>>>>>> 252f18111e9e5a3b3154f2bd990c3c88d9443499
           <button  class="btn btn-info" type="submit">LOG IN</button>
         </form>
       </div>
@@ -338,7 +348,25 @@
               Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.
             </div>
           {% endif %}
+<<<<<<< HEAD
           <div style="margin-bottom: 10px;"></div>
+=======
+          {% if username_taken %}
+            <div class="alert alert-danger" role="alert">
+              Username is already taken.
+            </div>
+          {% endif %}
+          {% if email_taken %}
+            <div class="alert alert-warning" role="alert">
+              Email is already in use.
+            </div>
+          {% endif %}
+          {% if phone_number_taken %}
+            <div class="alert alert-warning" role="alert">
+              Phone Number is already in use.
+            </div>
+          {% endif %}
+>>>>>>> 252f18111e9e5a3b3154f2bd990c3c88d9443499
           <button class="btn btn-info"  type="submit">SIGN UP</button>
         </form>
       </div>

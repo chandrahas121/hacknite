@@ -15,7 +15,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15, unique=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True)
-
+    rating = models.FloatField(default=0)
     # Provide custom related_name attributes
     groups = models.ManyToManyField(
         'auth.Group',
