@@ -59,19 +59,19 @@ def accept_friend_request(request, request_id):
     # Redirect to the desired URL
     return redirect('history')  # Replace 'hackniteridehistory' with your actual URL name
 
-
 @login_required
 def history(request):
     # Filter accepted requests where the current user is either the sender or receiver
     accepted_requests = AcceptedRequest.objects.filter(
         Q(sender=request.user) | Q(receiver=request.user)
-    )
+    ).order_by('-timestamp')  # Order by timestamp in descending order
 
     context = {
         'accepted_requests': accepted_requests,
     }
 
     return render(request, 'hackniteridehistory.html', context)
+
 
 @login_required
 def decline_friend_request(request, request_id):
