@@ -108,6 +108,10 @@ body {
     transform: translateY(-50%);
     right: 15px;
 }
+.no-rides-message p {
+    font-size: 1.5em; /* Enlarge the font size */
+    color: #555; /* Grey color */
+}
 
 </style>
 </head>
@@ -144,69 +148,57 @@ body {
                     
                 </div>
                 <div class="card-body" id="scrollable-list">
+                    {% if accepted_requests %}
                     <!-- Invitations items go here -->
-                    {% for requests in accepted_requests %}
-                    <div class="item d-flex align-items-center">
-                        
-                            {% if request.user != requests.sender %}
-                                <div class="image"><img src="{{requests.sender.profile_photo.url }}" alt="..." class="img-fluid rounded-circle"></div>
-                                <div class="text">
-                                <a href="#"><h3 class="h5">{{ requests.sender.username }}</h3></a>
-                                <small>from {{requests.source}} to {{requests.destination}} on {{requests.date}} at {{requests.time}}</small>
-                            {% else %}
-                                <div class="image"><img src="{{requests.receiver.profile_photo.url }}" alt="..." class="img-fluid rounded-circle"></div>
-                                <div class="text">
-                                <a href="#"><h3 class="h5">{{ requests.receiver.username }}</h3></a>
-                                <small>from {{requests.source}} to {{requests.destination}} on {{requests.date}} at {{requests.time}}</small>
-                            {% endif %}
-                            <!-- <small>{{ requests.timestamp }}</small> -->
-                        </div>
-                        <div class="ml-auto btn-group mt-2" role="group" aria-label="Feedback or Chat">
-                                      <!-- Feedback Form -->
-                                      {% if request.user.id != requests.sender.id %}
-                                            <form method="post" action="{% url 'rate_page_view' user_id=requests.sender.id %}">
+                        {% for requests in accepted_requests %}
+                        <div class="item d-flex align-items-center">
+                            
+                                {% if request.user != requests.sender %}
+                                    <div class="image"><img src="{{requests.sender.profile_photo.url }}" alt="..." class="img-fluid rounded-circle"></div>
+                                    <div class="text">
+                                    <a href="#"><h3 class="h5">{{ requests.sender.username }}</h3></a>
+                                    <small>from {{requests.source}} to {{requests.destination}} on {{requests.date}} at {{requests.time}}</small>
+                                {% else %}
+                                    <div class="image"><img src="{{requests.receiver.profile_photo.url }}" alt="..." class="img-fluid rounded-circle"></div>
+                                    <div class="text">
+                                    <a href="#"><h3 class="h5">{{ requests.receiver.username }}</h3></a>
+                                    <small>from {{requests.source}} to {{requests.destination}} on {{requests.date}} at {{requests.time}}</small>
+                                {% endif %}
+                                <!-- <small>{{ requests.timestamp }}</small> -->
+                            </div>
+                            <div class="ml-auto btn-group mt-2" role="group" aria-label="Feedback or Chat">
+                                        <!-- Feedback Form -->
+                                        {% if request.user.id != requests.sender.id %}
+                                                <form method="post" action="{% url 'rate_page_view' user_id=requests.sender.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-light">Feedback</button>
+                                        </form>
+                                        
+                                        {% else %}
+                                        <form method="post" action="{% url 'rate_page_view' user_id=requests.receiver.id %}">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-light">Feedback</button>
-                                    </form>
-                                    
-                                    {% else %}
-                                    <form method="post" action="{% url 'rate_page_view' user_id=requests.receiver.id %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-light">Feedback</button>
-                                    </form>
-                                    
-                                    {% endif %}
-                            
-                            <form method="post" action="{% url 'create_chat_room' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="sender_id" value="{{ requests.sender.id }}">
-                                <input type="hidden" name="receiver_id" value="{{ requests.receiver.id }}">
-                                <button type="submit" class="btn btn-info">Chat</button>
-                            </form>
-                            
+                                        </form>
+                                        
+                                        {% endif %}
+                                
+                                <form method="post" action="{% url 'create_chat_room' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="sender_id" value="{{ requests.sender.id }}">
+                                    <input type="hidden" name="receiver_id" value="{{ requests.receiver.id }}">
+                                    <button type="submit" class="btn btn-info">Chat</button>
+                                </form>
+                                
+                            </div>
                         </div>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
                     
-                    
-                    
-                    
-                    
-                    
-                    <!-- Add more invitation items here -->
-                    <!-- Example:
-                    <div class="item d-flex align-items-center">
-                        <div class="image"><img src="..." alt="..." class="img-fluid rounded-circle"></div>
-                        <div class="text">
-                            <a href="#"><h3 class="h5">User X</h3></a>
-                            <small>Posted on Xth Month Year by X User. </small>
+                    {% else %}
+                        <!-- Display "No Rides" message when there are no accepted requests -->
+                        <div class="text-center no-rides-message">
+                            <p>No Rides</p>
                         </div>
-                        <div class="ml-auto btn-group mt-2" role="group" aria-label="Accept or Decline">
-                            <button type="button" class="btn btn-success">Accept</button>
-                            <button type="button" class="btn btn-danger">Decline</button>
-                        </div>
-                    </div>
-                    -->
+                    {% endif %}
                 </div>
             </div>
         </div>

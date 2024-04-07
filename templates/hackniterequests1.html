@@ -139,10 +139,13 @@ body {
                 </div>
                 <div class="card-header d-flex align-items-center">
                     <h2 class="h3">Your Requests</h2>
-                    <div class="badge badge-rounded bg-green">4 New </div>
+                    {% if requests %}
+                    <div class="badge badge-rounded bg-green">{{ requests|length }} New </div>
+                    {% endif %}
                 </div>
                 <!-- Add this code inside the appropriate location where requests should be displayed -->
                 <div class="card-body" id="requests-list">
+                    {% if requests %}
                     {% for request in requests %}
                     <div class="item d-flex align-items-center">
                         <div class="image"><img src="{{request.receiver.profile_photo.url }}" alt="..." class="img-fluid rounded-circle"></div>
@@ -159,6 +162,9 @@ body {
                         </div>
                     </div>
                     {% endfor %}
+                    {% else %}
+                        <p>No requests Sent</p>
+                    {% endif %}
                 </div>
 
             </div>
@@ -173,10 +179,13 @@ body {
                 </div>
                 <div class="card-header d-flex align-items-center">
                     <h2 class="h3">Invitations</h2>
-                    <div class="badge badge-rounded bg-green">4 New </div>
+                    {% if invitations %}
+                    <div class="badge badge-rounded bg-green">{{ invitations|length }} New </div>
+                    {% endif %}
                 </div>
                 <!-- Add this code inside the appropriate location where invitations should be displayed -->
                 <div class="card-body" id="invitations-list">
+                    {% if invitations %}
                     {% for invitation in invitations %}
                     <div class="item d-flex align-items-center">
                         <div class="image"><img src="{{invitation.sender.profile_photo.url }}" alt="..." class="img-fluid rounded-circle"></div>
@@ -197,6 +206,9 @@ body {
                         </div>
                     </div>
                     {% endfor %}
+                    {% else %}
+                        <p>No invitations received</p>
+                    {% endif %}
                 </div>
 
             </div>
