@@ -15,26 +15,26 @@ User=get_user_model()
 #     return render(request, 'authentication/hackfake.html')
 
 
-def is_strong_password(password):
-    """
-    Function to check if the password meets the strength criteria.
-    Returns True if the password is strong, False otherwise.
-    """
-    # Define strength criteria (e.g., minimum length, presence of uppercase, lowercase, digits, and special characters)
-    min_length = 8
-    has_uppercase = any(char.isupper() for char in password)
-    has_lowercase = any(char.islower() for char in password)
-    has_digit = any(char.isdigit() for char in password)
-    has_special_char = bool(re.search(r'[!@#$%^&*(),.?":{}|<>]', password))
+# def is_strong_password(password):
+#     """
+#     Function to check if the password meets the strength criteria.
+#     Returns True if the password is strong, False otherwise.
+#     """
+#     # Define strength criteria (e.g., minimum length, presence of uppercase, lowercase, digits, and special characters)
+#     min_length = 8
+#     has_uppercase = any(char.isupper() for char in password)
+#     has_lowercase = any(char.islower() for char in password)
+#     has_digit = any(char.isdigit() for char in password)
+#     has_special_char = bool(re.search(r'[!@#$%^&*(),.?":{}|<>]', password))
 
-    # Check if the password meets all criteria
-    return (
-        len(password) >= min_length and
-        has_uppercase and
-        has_lowercase and
-        has_digit and
-        has_special_char
-    )
+#     # Check if the password meets all criteria
+#     return (
+#         len(password) >= min_length and
+#         has_uppercase and
+#         has_lowercase and
+#         has_digit and
+#         has_special_char
+#     )
 
 @csrf_protect
 def signup(request):
@@ -61,9 +61,9 @@ def signup(request):
             return render(request, 'authentication/hackfake.html', context)
         
         # Check if the password is strong
-        if not is_strong_password(password):
-            context = {'weak_password': True}
-            return render(request, 'authentication/hackfake.html', context)
+        # if not is_strong_password(password):
+        #     context = {'weak_password': True}
+        #     return render(request, 'authentication/hackfake.html', context)
 
         # Create user
         try:
