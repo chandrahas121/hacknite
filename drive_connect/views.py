@@ -3,21 +3,26 @@ from .models import UserTrip
 from datetime import datetime
 from django.db.models import Q
 from ride.models import Rating
+from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request, 'hacnitewelcome.html')
 
+@login_required
 def profile(request):
     return render(request, 'hackniteprofile.html')
 
 from django.contrib import messages
 
+@login_required
 def search_users(request):
     if request.method == 'POST':
         source = request.POST.get('source')
         destination = request.POST.get('destination')
         date = request.POST.get('date')
         time = request.POST.get('time')
-
+        source=source.lower()
+        destination=destination.lower()
+        
         if source and destination and date and time:
             input_time = datetime.strptime(time, '%H:%M').time()
             current_user = request.user
