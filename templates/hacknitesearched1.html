@@ -117,7 +117,7 @@
                 </div>
             </div>
         </nav>
-          
+        {% if users_with_same_trip %}
         <div class="container-fluid main-body">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 gutters-sm">
               {% for user_trip in users_with_same_trip %}
@@ -128,9 +128,15 @@
                           <!-- <img src="{{ user_trip.user.profile_image.url }}" style="width:100px;margin-top:-65px" alt="User" class="img-fluid img-thumbnail rounded-circle border-0 mb-3"> -->
                           <img src="{{ user_trip.user.profile_photo.url }}" style="width:100px;margin-top:-65px" alt="User" class="img-fluid img-thumbnail rounded-circle border-0 mb-3">
                           <h5 class="card-title">{{ user_trip.user.username }}</h5>
-                          <p class="text-secondary mb-1">{{ user_trip.user.email }}</p>
+                          <!-- <p class="text-secondary mb-1">{{ user_trip.user.email }}</p> -->
                           <p class="text-secondary mb-1">{{ user_trip.source }} to {{ user_trip.destination }}</p>
                           <p class="text-secondary mb-1">{{ user_trip.date }} - {{ user_trip.time }}</p>
+                          {% if user_trip.user.rating == 0.0 %}
+                            <p class="text-secondary mb-1">Rating: Not Available</p>
+                            {% else %}
+                            <p class="text-secondary mb-1">Rating: {{user_trip.user.rating}}/5 </p>
+                            <!-- <small><p class="text-secondary mb-1">0 users rated</p></small> -->
+                        {% endif %}
                           <!-- Add other card details based on your UserTrip model fields -->
                         </div>
                         <div class="card-footer">
@@ -158,3 +164,14 @@
                 {% endfor %}
             </div>
         </div>
+        {% else %}
+        <div class="container-fluid main-body">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center">
+                    <div class="alert alert-info" role="alert">
+                        There are no matched rides.
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
