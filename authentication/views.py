@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login as auth_login,logout as user_logout
 from django.views.decorators.csrf import csrf_protect
 import re
-from django.contrib import messages
+from django.db import IntegrityError
 User=get_user_model()
 #import authentication
 # Create your views here.
@@ -66,10 +66,35 @@ def signup(request):
             return render(request, 'authentication/hackfake.html', context)
 
         # Create user
-        user = User.objects.create_user(username=username, password=password, email=email, age=age, gender=gender, phone_number=phone_number)
-        # Perform further processing as needed
-        return redirect('login')
-
+        try:
+            print('trying to create')
+            # Attempt to create the user
+            user = User.objects.create_user(username=username, password=password, email=email, age=age, gender=gender, phone_number=phone_number)
+            # Redirect to login page after successful signup
+            return redirect('login')
+        except IntegrityError as e:
+            print('got integrity error')
+            print(e)
+            if 'UNIQUE constraint' in str(e):
+                print('UNIQUE constraint')
+                # Determine which unique constraint is violated
+                error_message = str(e)
+                if 'username' in error_message:
+                    print('username should be unique')
+                    context = {'username_taken': True}
+                elif 'email' in error_message:
+                    context = {'email_taken': True}
+                elif 'phone_number' in error_message:
+                    context = {'phone_number_taken': True}
+                else:
+                    # If the specific constraint is not clear from the error message, provide a generic error
+                    context = {'generic_error': True}
+                return render(request, 'authentication/hackfake.html', context)
+            else:
+                # For other IntegrityError cases, log the error and return a generic error message
+                print("IntegrityError:", e)
+                context = {'generic_error': True}
+                return render(request, 'authentication/hackfake.html', context)
     return render(request, "authentication/hackfake.html")
   
 def login(request):
@@ -81,11 +106,13 @@ def login(request):
         password = request.POST.get('password')
 
         if not username or not password:
+            context={}
             if not username:
-                messages.error(request, 'Username field is empty.')
-            if not password:
-                messages.error(request, 'Password field is empty.')
-            return render(request, 'authentication/hackfake.html')
+                context['field']= 'Username'
+            elif not password:
+                context['field']= 'Password'
+            print(context)
+            return render(request, 'authentication/hackfake.html', context)
         # Authenticate the user
         user = authenticate(request, username=username, password=password)
 
