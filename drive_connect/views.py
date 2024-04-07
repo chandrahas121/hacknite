@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import UserTrip
 from datetime import datetime
 from django.db.models import Q
-
+from ride.models import Rating
 def home(request):
     return render(request, 'hacnitewelcome.html')
 
