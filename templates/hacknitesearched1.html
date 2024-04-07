@@ -117,7 +117,7 @@
                 </div>
             </div>
         </nav>
-          
+        {% if users_with_same_trip %}
         <div class="container-fluid main-body">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 gutters-sm">
               {% for user_trip in users_with_same_trip %}
@@ -158,3 +158,14 @@
                 {% endfor %}
             </div>
         </div>
+        {% else %}
+        <div class="container-fluid main-body">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center">
+                    <div class="alert alert-info" role="alert">
+                        There are no matched rides.
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
